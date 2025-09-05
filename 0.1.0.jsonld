@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "group:": "https://swicg.github.io/groups/0.1.0.jsonld#",
+    "members": {
+      "@id": "group:members",
+      "@type": "@id"
+    },
+    "admins": {
+      "@id": "group:admins",
+      "@type": "@id"
+    },
+    "collections": {
+      "@id": "group:collections",
+      "@type": "@id"
+    },
+    "pendingActivities": {
+      "@id": "group:pendingActivities",
+      "@type": "@id"
+    },
+    "pendingMembers": {
+      "@id": "group:pendingMembers",
+      "@type": "@id"
+    }
+  }
+}
