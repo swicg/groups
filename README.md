@@ -8,6 +8,15 @@ This page should be available at [https://swicg.github.io/groups/](https://swicg
 
 The task force leads are [Evan Prodromou](https://github.com/evanp) and [a](https://github.com/twrnh).
 
+## Timeline
+
+Here are some things that have happened with this task force.
+
+- Nov 2024: Task force started by swicg.
+- Dec 2024: User stories added.
+- May 2025: Additional user stories.
+- Sep 2025: First version of the explainer (this document) published.
+
 ## User stories
 
 [User stories](https://en.wikipedia.org/wiki/User_story) for this task force are collected and tracked in the [GitHub issue tracker][issues]. Each user story issue has the [user story issue tag][user story issue tag].
