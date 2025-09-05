@@ -2,6 +2,8 @@
 
 This is a task force of the [Social Web Incubator Community Group (SWICG)][swicg] to explore the use of groups in ActivityPub.
 
+This page should be available at [https://swicg.github.io/groups/](https://swicg.github.io/groups/).
+
 ## Leads
 
 The task force leads are [Evan Prodromou](https://github.com/evanp) and [a](https://github.com/twrnh).
