@@ -6,7 +6,7 @@ This page should be available at [https://swicg.github.io/groups/](https://swicg
 
 ## Leads
 
-The task force leads are [Evan Prodromou](https://github.com/evanp) and [a](https://github.com/twrnh).
+The task force leads are [Evan Prodromou](https://github.com/evanp) and [a](https://github.com/trwnh).
 
 ## Timeline
 
