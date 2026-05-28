@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Groups in the ActivityPub ecosystem</title>
+	<script
+		src="https://www.w3.org/Tools/respec/respec-w3c"
+		class="remove"
+		async
+	></script>
+	<script class="remove">
+		var respecConfig = {
+		specStatus: "CG-DRAFT",
+		editors: [{ name: "a", url: "https://trwnh.com/#a" }],
+		github: "swicg/groups",
+		shortName: "ap-groups",
+		xref: "web-platform",
+		group: "socialcg",
+		localBiblio: {
+			"FOAF2": { // manual override until https://github.com/tobie/specref/pull/930 is merged
+				title: "FOAF Vocabulary Specification 0.99 (Paddington Edition)",
+				href: "http://xmlns.com/foaf/spec/",
+				authors: ["Dan Brickley", "Libby Miller"],
+				publisher: "FOAF project",
+				date: "14 January 2014"
+			},
+			"FEP-1b12": {
+				title: "FEP-1b12: Group federation",
+				href: "https://w3id.org/fep/1b12",
+				authors: ["Felix Ableitner"],
+				publisher: "Fediverse Enhancement Proposals",
+				date: "09 February 2023"
+			},
+			"understanding-social-groups": {
+				title: "Principles of Social Psychology, Chapter 10.1 Understanding Social Groups",
+				href: "https://opentextbc.ca/socialpsychology/chapter/understanding-social-groups/",
+				authors: ["Dr. Rajiv Jhangiani", "Dr. Hammond Tarry"],
+				publisher: "BCcampus Open Publishing",
+				date: "2022"
+			}
+		},
+		};
+	</script>
+	<style>
+		pre, code {
+			tab-size: 3;
+		}
+	</style>
+</head>
+<body>
+	<section id="abstract">
+		<p>Groups are a shared context for communications organized around bounded membership in a set of group members. Membership in a group is distinct from following the group; being a follower entails potentially receiving future activities published by an actor, but being a member entails a social role within the group independently of whether activities are received. This document explores ways to create and manage groups within the ActivityPub ecosystem.</p>
+	</section>
+	<section id="sotd"></section>
+	<section id="conformance"></section>
+	<section class="informative" id="intro">
+		<h2>Introduction</h2>
+		<section id="what">
+			<h3>What is a group?</h3>
+			<p>In a social setting, activities can be bound to various contexts. These contexts can be things like:</p>
+			<ul>
+				<li>Posts by a certain author</li>
+				<li>Posts regarding a certain topic</li>
+				<li>Posts having a certain audience</li>
+				<li>Posts using a certain tag</li>
+			</ul>
+			<p>Popular implementations of ActivityPub (and popular social networking and social media services) have unfortunately historically neglected support for binding resources to context, in a problem known as context collapse. In particular, the social ecosystem widely lacks primitives for posts having authorship and audience bound to a consistent but dynamic collective <em>group</em>.</p>
+			<p>In social psychology, groups are established based on a shared purpose or identity that mediates group activities. For example, users hosted on the same network or service do not necessarily share any common identity. You could describe a "collection of all users on this service", but this is not necessarily the same as a "group". The quality that defines a "group" is its <dfn>entitativity</dfn>, or the perception of being a group</dfn> (from [[[understanding-social-groups]]]). It is only when the Group becomes a "real" "entity" (or is "reified") that we can consider it a Group (and not simply a Collection of actors). We can describe properties of the group separately from properties of its members, and separately from properties of the collection.</p>
+		</section>
+		<section id="disambiguation">
+			<h3>How does this work differ from other uses of the word "group"?</h3>
+			<p>The term "Group" is used in other contexts in ways that may or may not align with the use of the word "Group" in this document.</p>
+			<section id="relation-to-foaf">
+				<h4>Relation to FOAF (Friend Of A Friend) "Group"</h4>
+				<p> The [[[FOAF]]] is one of the earliest vocabularies to define a concept of a "Group", alongside other social concepts. In particular, relations like "member" and "membershipClass" can be used to describe who is a member of the group. FOAF defines "Group" like so:</p>
+				<blockquote cite="https://xmlns.com/foaf/spec/#term_Group">
+					<p>The Group class represents a collection of individual agents (and may itself play the role of a Agent, ie. something that can perform actions).</p>
+					<p>This concept is intentionally quite broad, covering informal and ad-hoc groups, long-lived communities, organizational groups within a workplace, etc. [...]</p>
+					<p></p>
+				</blockquote>
+			</section>
+			<section id="relation-to-vcard">
+				<h4>Relation to vCard "Group"</h4>
+				<p>The [[[RFC6350]]] defines a KIND of "group" like so:</p>
+				<blockquote cite="https://www.rfc-editor.org/rfc/rfc6350.html#section-6.1.4">
+					<p>a vCard representing a group of persons or entities. The group's member entities can be other vCards or other types of entities, such as email addresses or web sites.  A group vCard will usually contain MEMBER properties to specify the members of the group, but it is not required to.  A group vCard without MEMBER properties can be considered an abstract grouping, or one whose members are known empirically (perhaps "IETF Participants" or "Republican U.S. Senators").</p>
+         		<p>All properties in a group vCard apply to the group as a whole, and not to any particular MEMBER.  For example, an EMAIL property might specify the address of a mailing list associated with the group, and an IMPP property might refer to a group chat room.</p>
+				</blockquote>
+				<p>The concept of membership, while optional, is one of the defining features of a group according to vCard. It is possible to describe membership in a group using both the vocabulary of vCard and the vocabulary defined in this document.</p>
+			</section>
+			<section id="relation-to-as2">
+				<h4>Relation to Activity Streams 2.0 "Group"</h4>
+				<p>The [[[activitystreams-vocabulary]]] defines a Group only in the most general terms:</p>
+				<blockquote cite="https://www.w3.org/TR/activitystreams-vocabulary/#dfn-group">Represents a formal or informal collective of Actors.</blockquote>
+				<p>The groups described by this document can be said to be instances of <code>https://www.w3.org/ns/activitystreams#Group</code>, but they carry additional considerations. Activity Streams 2.0 does not define a concept of membership within a "Group".</p>
+				<p>Note that the membership concepts defined in this document can be used with other types, and the protocols for managing membership depend on the presence of properties rather than the presence of types.</p>
+			</section>
+			<section id="relation-to-ap">
+				<h4>Relation to ActivityPub and "followers"</h4>
+				<p>[[[activitypub]]] defines an actor system where activities can be published to outboxes and pushed to addressed audiences as notifications. Primarily, ActivityPub defines a way to manage "followers" via the "Follow" activity, which one can later "Accept" or "Reject":</p>
+				<blockquote cite="https://www.w3.org/TR/activitypub/#followers">
+					<p>The follow activity generally is a request to see the objects an actor creates. This makes the Followers collection an appropriate default target for delivery of notifications.</p>
+				</blockquote>
+				<p>However, binding all social contexts to the concept of "followers" limits the range of social contexts that people can participate in. Being a follower does not carry any inherent social considerations beyond a simple desire to see more activities from a certain actor. Also, the concept of members is distinct from the concept of followers; it is possible to be a member without receiving activities intended for followers.</p>
+			</section>
+			<section id="relation-to-fep-1b12">
+				<h4>Relation to FEP-1b12 "Group"</h4>
+				<p>[[[FEP-1b12]]] uses the Activity Streams 2.0 "Group" term directly, but assumes that any or all "Group" object necessarily adheres to the protocol requirements laid out in the FEP. In FEP-1b12, a "Group" receives activities in its inbox, and publishes activities to its ActivityPub followers where the type is Announce and the object of the Announce is the received activity (instead of <a href="https://www.w3.org/TR/activitypub/#inbox-forwarding">forwarding from inbox</a> as defined in ActivityPub).</p>
+				<p>The groups described in this document are not constrained in which activities they produce. It is possible to produce Announce activities in accordance with the aforementioned FEP, but this is not a requirement of this document.</p>
+			</section>
+			<section id="relation-to-mls">
+				<h4>Relation to MLS "Group"</h4>
+				<p>[[[RFC9420]]] and [[[RFC9750]]] define a notion of a "group" as a shared cryptographic state:</p>
+				<blockquote cite="https://www.rfc-editor.org/info/rfc9750/#name-protocol-overview">
+					<p>A client that is part of a group is a member of that group. As groups change membership and group or member properties, they advance from one epoch to another and the cryptographic state of the group evolves.</p>
+				</blockquote>
+				<p>This document's notion of groups similarly allows for binding state to the group context, but without a strong requirement of cryptography or encryption.</p>
+			</section>
+			<section id="relation-to-platforms">
+				<h4>Relation to similar concepts on other platforms</h4>
+				<p>Some platforms implement "group" functionality, although it may not be called a "group".</p>
+				<ul>
+					<li>Some social networking services have "groups" which users can join or leave as members, and a single context for posts known as a "wall".</li>
+					<li>Some social communication platforms have "guilds" which contain members and roles and invites, and allow members to post in multiple contexts called "channels" within the guild. (In some cases, the user-facing term for this functionality is "servers"; although at a service level these guilds may be hosted on the same server, they can be thought of as virtual servers.)</li>
+					<li>Various messaging platforms have "rooms", which maintain a list of members that pass messages to each other.</li>
+				</ul>
+			</section>
+		</section>
+		<section id="other-task-forces">
+			<h3>How does this differ from other Social CG task forces?</h3>
+			<section id="relation-to-forums">
+				<h4>Relation to Forums and Threaded Discussion Task Force</h4>
+				<p>A popular conception of "groups" is as a sort of forum. However, while the Forums task force deals with the organization of posts into threads and/or forums, the Groups task force deals with the organization of actors into groups which have members and roles. Thus, the work of these two task forces is complementary.</p>
+			</section>
+			<section id="relation-to-e2ee">
+				<h4>Relation to End-to-End Encryption (E2EE) Task Force</h4>
+				<p>Since <a href="#relation-to-mls">MLS is designed around a concept of "groups"</a>, alignment between this document's model of groups and the MLS model of groups can allow implementation of the group architecture via an MLS group's application data, and opening the possibility of both authenticated and encrypted groups.</p>
+			</section>
+		</section>
+	</section>
+	<section id="definitions">
+		<h2>Terms defined</h2>
+		<section id="Member">
+			<h3>Member</h3>
+			<dl resource="#Member" typeof="rdfs:Class">
+				<dt>URI</dt>
+				<dd><code>https://swicg.github.io/groups/#Member</code></dd>
+				<dt>Label</dt>
+				<dd>membership record</dd>
+				<dt>Comment</dt>
+				<dd>Tracks membership-related state within a group context.</dd>
+			</dl>
+		</section>
+		<section id="members">
+			<h3>members</h3>
+			<dl resource="#members" typeof="rdf:Property">
+				<dt>URI</dt>
+				<dd><code>https://swicg.github.io/groups/#members</code></dd>
+				<dt>Label</dt>
+				<dd property="rdfs:label">has a group members collection</dd>
+				<dt>Comment</dt>
+				<dd property="rdfs:comment">Contains membership records for all members in the group, both inactive and active.</dd>
+				<dt>Domain</dt>
+				<dd property="rdfs:domain" resource="https://www.w3.org/ns/activitystreams#Group">Group</dd>
+				<dt>Range</dt>
+				<dd property="rdfs:range" resource="https://www.w3.org/ns/activitystreams#Collection">Collection</dd>
+			</dl>
+		</section>
+
+		<section id="memberships">
+			<h3>memberships</h3>
+			<dl resource="#memberships" typeof="rdf:Property">
+				<dt>URI</dt>
+				<dd><code>https://swicg.github.io/groups/#memberships</code></dd>
+				<dt>Label</dt>
+				<dd property="rdfs:label">has a memberships collection</dd>
+				<dt>Comment</dt>
+				<dd property="rdfs:comment">Contains memberships records which refer to you. When you join a group, its corresponding membership will be added to this collection. When you leave a group, its corresponding membership can be deleted and/or removed from this collection.</dd>
+				<dt>Range</dt>
+				<dd property="rdfs:range" resource="https://www.w3.org/ns/activitystreams#Collection">Collection</dd>
+			</dl>
+		</section>
+	</section>
+	<section id="user-stories" class="appendix informative">
+		<h2>User stories</h2>
+		<section id="user-stories-for-groups">
+			<h3>Groups</h3>
+			<ul>
+				<li>As an individual, I want to create a group, so that my collective can partipicate together in a group context.</li>
+				<li>As a group owner, I want to delete a group, so that its data can be purged.</li>
+				<li>As a group owner, I want to transfer ownership to someone else, so that the group can outlive me.</li>
+			</ul>
+			<p>For information about the group:</p>
+			<ul>
+				<li>As an individual, I want to obtain a list of group properties, so that I can better decide if I want to join the group.</li>
+				<li>As a group member, I want to obtain a list of group members, so that I can know who else is in the group.</li>
+				<li>As an authorized group member, I want to update the group's properties, to add or replace outdated information.</li>
+			</ul>
+		</section>
+		<section id="user-stories-for-membership">
+			<h3>Membership</h3>
+			<p>For voluntarily managing one's own membership:</p>
+			<ul>
+				<li>As an individual, I want to join a group, so that I can become a group member.</li>
+				<li>As an individual, I want to leave a group, so that I am no longer a group member.</li>
+			</ul>
+			<p>For managing other people's memberships in a group you are authorized to manage:</p>
+			<ul>
+				<li>As someone managing a group, I want to accept join requests, so that individual becomes a group member.</li>
+				<li>As someone managing a group, I want to reject join requests, so that the individual does not become a group member.</li>
+				<li>As someone managing a group, I want to kick members from the group, so that they removed from the group's members.</li>
+				<li>As someone managing a group, I want to ban members from the group, so that they cannot (re)join the group.</li>
+				<li>As someone managing a group, I want to close a group, so that the group does not accept new members.</li>
+			</ul>
+		</section>
+		<section id="user-stories-for-roles">
+			<h3>Roles</h3>
+		</section>
+		<section id="user-stories-for-invites">
+			<h3>Invites</h3>
+			<ul>
+				<li>As an authorized group member, I want to create invites, so that members can use them to invite other potential members.</li>
+				<li>As a group member, I want to invite other people to the group, so that they can consider joining the group.</li>
+			</ul>
+		</section>
+		<section id="user-stories-for-posts">
+			<h3>Posts</h3>
+			<ul>
+				<li>As a group member, I want to post into the group, so that I can participate in shared activities within the group.</li>
+				<li>As a group member, I want to post to different audiences, so that some activities can be public and some activities can be private.</li>
+				<li>As an authorized group member, I want to remove posts from the group, so that unwanted posts aren't contained in the group context anymore.</li>
+			</ul>
+		</section>
+	</section>
+	<section id="approaches" class="appendix informative">
+		<h2>Potential approaches</h2>
+		<section id="join-requests">
+			<h3>Define side effects for the Join activity similarly to ActivityPub's Follow activity</h3>
+			<p>ActivityPub defines a flow for Follow, Accept, Reject, and Undo activities with the following states:</p>
+			<dl>
+				<dt>NONE</dt>
+				<dd>No follower relation exists. To establish one, a new Follow request must be sent.</dd>
+				<dt>PENDING</dt>
+				<dd>A Follow activity has been sent, but the Follow activity is not the object of any future Accept, Reject, or Undo activity.</dd>
+				<dt>FOLLOWER</dt>
+				<dd>An Accept Follow exists, and the Accept is not the object of any future Undo activity, and the Follow is not the object of any future Reject or Undo activity.</dd>
+			</dl>
+			<p>And the following state transitions:</p>
+			<ul>
+				<li>NONE to PENDING: Follow.</li>
+				<li>PENDING to NONE: Undo Follow.</li>
+				<li>PENDING to NONE: Reject Follow.</li>
+				<li>PENDING to FOLLOWER: Accept Follow. As a side effect, the actor is added to the "followers" collection.</li>
+				<li>FOLLOWER to PENDING: Undo Accept Follow, in theory.</li>
+				<li>FOLLOWER to NONE: Undefined behavior. In practice, some implementers handle a Reject Follow at any time, without requiring an Undo Accept Follow.</li>
+				<li>NONE to FOLLOWER: Not possible without first going through PENDING.</li>
+			</ul>
+			<p>This design from ActivityPub has the following shortcomings and issues:</p>
+			<ul>
+				<li>Lack of atomicity. The Follow activity does not describe an actual event until it has become the object of a future Accept, while also not being the object of any future Reject or Undo.</li>
+				<li>Lack of consistency. A Follow activity being referenced as the object of both an Accept and a Reject leads to undefined behavior and indeterminate state. Having an Accept Follow activity is not enough to infer a following relationship.</li>
+				<li>Lack of isolation. More than one Follow activity may exist, and it is not possible to establish which Follow activity is the currently "pending" one without unbounded knowledge of all relevant activities, including future activities.</li>
+				<li>Lack of durability. Losing track of a Follow activity can mean you are no longer able to Accept, Reject, or Undo it. In practice, the implicit existence of a "follow state machine" with that state distributed between both peers has led to many bugs and implementation errors that can be impossible to recover from without manual intervention from one or both service administrators. Attempts to work around this involve <a href="https://w3id.org/fep/8fcf">"partial follower collection synchronization"</a>, which is complicated and not implemented widely.</li>
+			</ul>
+			<p>It can seem appealing to mirror the Follow activity flow and its side effects, but with the Join activity instead of the Follow activity -- perhaps assuming that familiarity with the existing Follow flow will make it easier to implement a parallel Join flow. However, doing so inherits all of the aforementioned issues and would lead to a repeat of the implementation errors faced in practice.</p>
+		</section>
+		<section id="robust-approach">
+			<h3>A more robust approach with ACID compliance</h3>
+			<p>To address the shortcomings of the mirrored flow described above, we need a design with the following properties:</p>
+			<ul>
+				<li>Bind state to a membership record instead of to the activities manipulating that state, which an actor might Undo or ambiguously Reject at any future point.</li>
+				<li>Activities exist independently of the membership record, and current state is verifiable independently of future activities.</li>
+				<li>Track state only on one side, instead of requiring state synchronization.</li>
+			</ul>
+			<section id="create-membership">
+				<h4>Membership records</h4>
+				<p>The simplest way to create a membership record is to rely on something like HTTP PUT at an indexed location:</p>
+				<figure>
+					<pre class="http">
+					PUT /members/alice.example HTTP/1.1
+					Content-Type: application/activity+json
+
+					{
+						"type": "_:Member",
+						"_:user": {"id": "https://alice.example"},
+						"name": "arisu"
+					}
+					</pre>
+					<figcaption>PUT a membership record into the group's members collection for alice.example. Alice's display name in the group is set to "arisu", overriding Alice's default name (which is not stated here).</figcaption>
+				</figure>
+				<p>Alternatively, HTTP POST can be used instead, to let the members collection choose the resulting Location:</p>
+				<figure>
+					<pre class="http">
+					POST /members/ HTTP/1.1
+					Content-Type: application/activity+json
+
+					{
+						"type": "_:Member",
+						"_:user": {"id": "https://alice.example"},
+						"name": "arisu"
+					}
+					</pre>
+					<figcaption>POST to the group's members collection for alice.example. Alice's display name in the group is set to "arisu", overriding Alice's default name (which is not stated here).</figcaption>
+				</figure>
+				<p>The response might show that the membership is pending:</p>
+				<figure>
+					<pre class="http">
+					HTTP/1.1 201 Created
+					Location: https://group.example/members/01KSQFYKVAGWH0HW09QMTD2VC9
+					Content-Type: application/activity+json
+
+					{
+						"type": "_:Member",
+						"_:user": {"id": "https://alice.example"},
+						"_:pending": true,
+						"name": "arisu",
+					}
+					</pre>
+					<figcaption>The membership record has been created.</figcaption>
+				</figure>
+				<p>In this case, the member and the user are not the same -- the member wraps the user. Similarly, metadata about your membership within a group is not metadata of the actor. We can use membership records/entities to achieve this separation.</p>
+			</section>
+			<section id="flow">
+				<h4>Using Join to describe actually joining</h4>
+				<p>In MLS, clients are added to groups via Proposal/Commit, and then separately receive a Welcome message that contains the keying material needed to actually join the group. This "add before join" pattern means that the Join does not exist before the client has actually joined the group.</p>
+				<p>Per <a href="https://www.rfc-editor.org/rfc/rfc9750.html#name-users-clients-and-groups">MLS Architecture Section 3.7 "Users, Clients, and Groups"</a>:</p>
+				<blockquote cite="https://www.rfc-editor.org/rfc/rfc9750.html#name-users-clients-and-groups">
+					<p>Note that until a client has been added to the group and contributed to the group secret in a manner verifiable by other members of the group, other members cannot assume that the client is a member of the group; for instance, the newly added member might not have received the Welcome message or been unable to decrypt it for some reason.</p>
+				</blockquote>
+				<p>We could have the new member confirm their membership with a Join activity (which gets republished to the group's outbox), instead of using the Join activity to manage the membership itself.</p>
+			</section>
+			<section id="reifying-member">
+
+			</section>
+		</section>
+	</section>
+	<section id="changelog">
+		<h2>Changelog</h2>
+		<section id="v0">
+			<h3>Initial CG Draft</h3>
+			<ul>
+				<li>2026-05-28: Add abstract, introduction, user stories, and potential approaches. Potentially define terms for Member, members, memberships.</li>
+			</ul>
+		</section>
+	</section>
+</body>
+</html>
