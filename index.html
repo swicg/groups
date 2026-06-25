@@ -64,12 +64,13 @@
 				<li>Posts having a certain audience</li>
 				<li>Posts using a certain tag</li>
 			</ul>
-			<p>Popular implementations of ActivityPub (and popular social networking and social media services) have unfortunately historically neglected support for binding resources to context, in a problem known as context collapse. In particular, the social ecosystem widely lacks primitives for posts having authorship and audience bound to a consistent but dynamic collective <em>group</em>.</p>
-			<p>In social psychology, groups are established based on a shared purpose or identity that mediates group activities. For example, users hosted on the same network or service do not necessarily share any common identity. You could describe a "collection of all users on this service", but this is not necessarily the same as a "group". The quality that defines a "group" is its <dfn>entitativity</dfn>, or the perception of being a group</dfn> (from [[[understanding-social-groups]]]). It is only when the Group becomes a "real" "entity" (or is "reified") that we can consider it a Group (and not simply a Collection of actors). We can describe properties of the group separately from properties of its members, and separately from properties of the collection.</p>
+			<p>Popular implementations of ActivityPub (and popular social networking and social media services) have unfortunately historically neglected support for binding resources to context, in a problem known as <dfn>context collapse</dfn>. In particular, the social ecosystem widely lacks primitives for posts having authorship and audience bound to a consistent but dynamic collective <em>group</em>.</p>
+			<p>In social psychology, groups are established based on a shared purpose or identity that mediates group activities. For example, users hosted on the same network or service do not necessarily share any common identity. You could describe a "collection of all users on this service", but this is not necessarily the same as a "group". The quality that defines a "group" is its <dfn>entitativity</dfn>, or the perception of being a group (from [[[understanding-social-groups]]]). It is only when the Group becomes a "real" "entity" (or is "reified") that we can consider it a Group (and not simply a Collection of actors). We can describe properties of the group separately from properties of its members, and separately from properties of the collection.</p>
+			<p>Similarly, <dfn>membership</dfn> in a group entails its own properties within the group context, separately from the properties of the individual who is a group member. For example, you might have permission to perform certain actions in one group, but not in another. It would be imprecise to say that the <em>individual</em> holds those privileges; rather, the <em>member</em> holds those privileges within the group context, and that membership is a social role performed by the individual. Outside of the group context, membership considerations do not apply to the individual.</p>
 		</section>
 		<section id="disambiguation">
 			<h3>How does this work differ from other uses of the word "group"?</h3>
-			<p>The term "Group" is used in other contexts in ways that may or may not align with the use of the word "Group" in this document.</p>
+			<p>The term "Group" is used in other ways that may or may not align with the use of the word "Group" in this document.</p>
 			<section id="relation-to-foaf">
 				<h4>Relation to FOAF (Friend Of A Friend) "Group"</h4>
 				<p> The [[[FOAF]]] is one of the earliest vocabularies to define a concept of a "Group", alongside other social concepts. In particular, relations like "member" and "membershipClass" can be used to describe who is a member of the group. FOAF defines "Group" like so:</p>
@@ -105,7 +106,7 @@
 			</section>
 			<section id="relation-to-fep-1b12">
 				<h4>Relation to FEP-1b12 "Group"</h4>
-				<p>[[[FEP-1b12]]] uses the Activity Streams 2.0 "Group" term directly, but assumes that any or all "Group" object necessarily adheres to the protocol requirements laid out in the FEP. In FEP-1b12, a "Group" receives activities in its inbox, and publishes activities to its ActivityPub followers where the type is Announce and the object of the Announce is the received activity (instead of <a href="https://www.w3.org/TR/activitypub/#inbox-forwarding">forwarding from inbox</a> as defined in ActivityPub).</p>
+				<p>[[[FEP-1b12]]] uses the Activity Streams 2.0 "Group" term directly, but assumes that any or all "Group" objects necessarily adhere to the protocol requirements laid out in the FEP. In FEP-1b12, a "Group" receives activities in its inbox, and publishes activities to its ActivityPub followers where the type is Announce and the object of the Announce is the received activity (instead of <a href="https://www.w3.org/TR/activitypub/#inbox-forwarding">forwarding from inbox</a> as defined in ActivityPub).</p>
 				<p>The groups described in this document are not constrained in which activities they produce. It is possible to produce Announce activities in accordance with the aforementioned FEP, but this is not a requirement of this document.</p>
 			</section>
 			<section id="relation-to-mls">
@@ -114,7 +115,7 @@
 				<blockquote cite="https://www.rfc-editor.org/info/rfc9750/#name-protocol-overview">
 					<p>A client that is part of a group is a member of that group. As groups change membership and group or member properties, they advance from one epoch to another and the cryptographic state of the group evolves.</p>
 				</blockquote>
-				<p>This document's notion of groups similarly allows for binding state to the group context, but without a strong requirement of cryptography or encryption.</p>
+				<p>This document's notion of groups similarly allows for binding state to the group context, but without a strong requirement for cryptography or encryption.</p>
 			</section>
 			<section id="relation-to-platforms">
 				<h4>Relation to similar concepts on other platforms</h4>
@@ -186,35 +187,43 @@
 		<section id="user-stories-for-groups">
 			<h3>Groups</h3>
 			<ul>
-				<li>As an individual, I want to create a group, so that my collective can partipicate together in a group context.</li>
+				<li class="issue" data-number="3">As an individual, I want to create a group, so that my collective can partipicate together in a group context.</li>
+				<li class="issue" data-number="20">As a group owner, I want to transfer ownership to someone else, so that the group can outlive me.</li>
 				<li>As a group owner, I want to delete a group, so that its data can be purged.</li>
-				<li>As a group owner, I want to transfer ownership to someone else, so that the group can outlive me.</li>
 			</ul>
 			<p>For information about the group:</p>
 			<ul>
-				<li>As an individual, I want to obtain a list of group properties, so that I can better decide if I want to join the group.</li>
-				<li>As a group member, I want to obtain a list of group members, so that I can know who else is in the group.</li>
-				<li>As an authorized group member, I want to update the group's properties, to add or replace outdated information.</li>
+				<li class="issue" data-number="21">As an individual, I want to obtain a list of group properties, so that I can better decide if I want to join the group.</li>
+				<li class="issue" data-number="6">As a group member, I want to obtain a list of group members, so that I can know who else is in the group.</li>
+				<li class="issue" data-number="33">As a current or potential group member, I want to see a group's rules and code of conduct, so that I can understand behavioral expectations within the group.</li>
+				<li class="issue" data-number="22">As an authorized group member, I want to update the group's properties, to add or replace outdated information.</li>
 			</ul>
 		</section>
 		<section id="user-stories-for-membership">
 			<h3>Membership</h3>
 			<p>For voluntarily managing one's own membership:</p>
 			<ul>
-				<li>As an individual, I want to join a group, so that I can become a group member.</li>
-				<li>As an individual, I want to leave a group, so that I am no longer a group member.</li>
+				<li class="issue" data-number="1">As an individual, I want to join a group, so that I can become a group member.</li>
+				<li class="issue" data-number="2">As an individual, I want to leave a group, so that I am no longer a group member.</li>
+				<li class="issue" data-number="41">As an individual, I want to get a list of my current memberships in groups, so that I can keep track of which groups I'm in.</li>
 			</ul>
 			<p>For managing other people's memberships in a group you are authorized to manage:</p>
 			<ul>
-				<li>As someone managing a group, I want to accept join requests, so that individual becomes a group member.</li>
-				<li>As someone managing a group, I want to reject join requests, so that the individual does not become a group member.</li>
-				<li>As someone managing a group, I want to kick members from the group, so that they removed from the group's members.</li>
-				<li>As someone managing a group, I want to ban members from the group, so that they cannot (re)join the group.</li>
-				<li>As someone managing a group, I want to close a group, so that the group does not accept new members.</li>
+				<li class="issue" data-number="10">As someone managing a group, I want to accept join requests, so that individual becomes a group member.</li>
+				<li class="issue" data-number="11">As someone managing a group, I want to reject join requests, so that the individual does not become a group member.</li>
+				<li class="issue" data-number="5">As someone managing a group, I want to kick members from the group, so that they are removed from the group's members.</li>
+				<li class="issue" data-number="29">As someone managing a group, I want to ban members from the group, so that they cannot (re)join the group.</li>
+				<li class="issue" data-number="16">As someone managing a group, I want to close a group, so that the group does not accept new members.</li>
 			</ul>
 		</section>
 		<section id="user-stories-for-roles">
 			<h3>Roles</h3>
+		</section>
+		<section id="user-stories-for-permissions">
+			<h3>Permissions</h3>
+			<ul>
+				<li class="issue" data-number="26">As a group owner, I want to grant permissions and privileges to members and roles, so that I can control who can perform which actions.</li>
+			</ul>
 		</section>
 		<section id="user-stories-for-invites">
 			<h3>Invites</h3>
@@ -226,9 +235,28 @@
 		<section id="user-stories-for-posts">
 			<h3>Posts</h3>
 			<ul>
-				<li>As a group member, I want to post into the group, so that I can participate in shared activities within the group.</li>
-				<li>As a group member, I want to post to different audiences, so that some activities can be public and some activities can be private.</li>
-				<li>As an authorized group member, I want to remove posts from the group, so that unwanted posts aren't contained in the group context anymore.</li>
+				<li class="issue" data-number="18">As a group member, I want to post into the group, so that I can participate in shared activities within the group.</li>
+				<li class="issue" data-number="13">As a group member, I want to post to different audiences, so that some activities can be public and some activities can be private.</li>
+				<li class="issue" data-number="19">As an authorized group member, I want to remove posts from the group, so that unwanted posts aren't contained in the group context anymore.</li>
+				<li class="issue" data-number="14">As an audience member, I want to browse posts within a group, so that I can see the activity happening within the group.</li>
+				<li class="issue" data-number="23">As an authorized group member, I want to review pending posts within a group before they are distributed, so that I can make sure they are on topic and match the group's expected conduct.</li>
+				<li class="issue" data-number="39">As an audience member, I want to follow the group separately from being a member, so that I can control whether I receive posts I am interested in from the group or from its members.</li>
+			</ul>
+		</section>
+		<section id="user-stories-for-structure">
+			<h3>Structure</h3>
+			<ul>
+				<li class="issue" data-number="31">As a group member who can manage group information, I want to link to related groups, so that current and/or potential group members can discover sibling communities where they may better participate or explore further.</li>
+				<li class="issue" data-number="32">As a group member who can manage the group, I want to create subgroups or channels within the larger group, so that group members can participate in more scoped contexts or discussions regarding specific topics or purposes.</li>
+				<li class="issue" data-number="36">As a group owner, I want to enable consensus-based governance, so that managing the group involves participation from multiple members.</li>
+			</ul>
+		</section>
+		<section id="user-stories-for-misc">
+			<h3>Unsorted user stories</h3>
+			<ul>
+				<li class="issue" data-number="27">As a group member, I want to report problematic content or behavior within the group to the group's moderators, so that conflicts within the group are resolved within the context of the group.</li>
+				<li class="issue" data-number="34">As a group owner, I want to move the group to a different host server without losing group data, so that the community isn't stuck on its original server.</li>
+				<li class="issue" data-number="35">As a group owner, I want to enable end-to-end encryption for the group, so that activities within the group are kept private from anyone not currently a group member.</li>
 			</ul>
 		</section>
 	</section>
@@ -329,9 +357,6 @@
 				</blockquote>
 				<p>We could have the new member confirm their membership with a Join activity (which gets republished to the group's outbox), instead of using the Join activity to manage the membership itself.</p>
 			</section>
-			<section id="reifying-member">
-
-			</section>
 		</section>
 	</section>
 	<section id="changelog">
@@ -339,6 +364,7 @@
 		<section id="v0">
 			<h3>Initial CG Draft</h3>
 			<ul>
+				<li>2026-06-25: Add GitHub links to user stories. Add paragraph to introduction describing the concept of membership and how a member differs from an individual.</li>
 				<li>2026-05-28: Add abstract, introduction, user stories, and potential approaches. Potentially define terms for Member, members, memberships.</li>
 			</ul>
 		</section>
