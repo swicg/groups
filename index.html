@@ -139,6 +139,70 @@
 			</section>
 		</section>
 	</section>
+	<section id="group-context">
+		<h2>Binding data to a group context</h2>
+		<section id="group-metadata">
+			<h3>Information about a group</h3>
+			<p>A group can be described like any other resource. The following terms from the ActivityStreams context (`https://www.w3.org/ns/activitystreams`) can be broadly useful:</p>
+			<dl>
+				<dt>`name` (`https://www.w3.org/ns/activitystreams#name`)</dt>
+				<dt>`summary` (`https://www.w3.org/ns/activitystreams#summary`)</dt>
+				<dd>The group can be rendered as text using these natural language properties.</dd>
+				<dt>`icon` (`https://www.w3.org/ns/activitystreams#icon`)</dt>
+				<dt>`image` (`https://www.w3.org/ns/activitystreams#image`)</dt>
+				<dd>The group can be rendered with visual elements using these properties.</dd>
+				<dt>`outbox` (`https://www.w3.org/ns/activitystreams#outbox`)</dt>
+				<dt>`streams` (`https://www.w3.org/ns/activitystreams#streams`)</dt>
+				<dd>The group can publish streams of activities here.</dd>
+
+				<dt>`inbox` (`http://www.w3.org/ns/ldp#inbox`)</dt>
+				<dd>The group can receive notifications and activities here.</dd>
+			</dl>
+			<p class="ednote">TODO: any missing properties?</p>
+		</section>
+		<section id="group-membership">
+			<h3>Tracking membership within a group</h3>
+			<p class="ednote">TODO: describe in more detail</p>
+			<p>A <a href="#members">`members`</a> collection contains <a href="#Member">`Member`</a> records for each group member.</p>
+			<p>To manage your membership in a group, see Section <a href="#members-protocol"></a>.</p>
+		</section>
+		<section id="group-roles">
+			<h3>Establishing roles within a group</h3>
+			<p class="ednote">TODO: needs discussion</p>
+			<p>For convenience, group managers can define roles to create subgroupings of group members</p>
+		</section>
+		<section id="group-permissions">
+			<h3>Performing actions within a group</h3>
+			<p class="ednote">TODO: needs discussion</p>
+			<p>Permissions</p>
+		</section>
+		<section id="group-streams">
+			<h3>Scoping content within a group</h3>
+			<p class="ednote">TODO: needs discussion</p>
+			<p>`context` or something similar?</p>
+		</section>
+	</section>
+	<section id="members-protocol">
+		<h2>Your membership within a group</h2>
+		<section id="member-join">
+			<h3>Join a group</h3>
+			<p class="ednote">TODO: needs discussion</p>
+			<ol>
+				<li>You create a membership record</li>
+				<li>The group then activates your membership</li>
+				<li>Confirm your membership by issuing a Join activity within the group context</li>
+			</ol>
+			<p>See <a href="#approaches"></a> for rationale.</p>
+		</section>
+		<section id="member-leave">
+			<h3>Leave a group</h3>
+			<p class="ednote">TODO: needs discussion</p>
+			<ol>
+				<li>Issue a Leave activity within the group?</li>
+				<li>The group deactivates and/or deletes your membership</li>
+			</ol>
+		</section>
+	</section>
 	<section id="definitions">
 		<h2>Terms defined</h2>
 		<section id="Member">
@@ -150,6 +214,8 @@
 				<dd>membership record</dd>
 				<dt>Comment</dt>
 				<dd>Tracks membership-related state within a group context.</dd>
+				<dt>See also</dt>
+				<dd><a href="https://www.w3.org/TR/vocab-org/#class-membership" property="rdfs:seeAlso" resource="http://www.w3.org/ns/org#Membership">org:Membership</a></dd>
 			</dl>
 		</section>
 		<section id="members">
@@ -165,6 +231,10 @@
 				<dd property="rdfs:domain" resource="https://www.w3.org/ns/activitystreams#Group">Group</dd>
 				<dt>Range</dt>
 				<dd property="rdfs:range" resource="https://www.w3.org/ns/activitystreams#Collection">Collection</dd>
+				<dt>See also</dt>
+				<dd><a href="https://xmlns.com/foaf/spec/#term_member" property="rdfs:seeAlso" resource="http://xmlns.com/foaf/0.1/member">foaf:member</a></dd>
+				<dd><a href="https://www.w3.org/TR/vcard-rdf/#d4e363" property="rdfs:seeAlso" resource="http://www.w3.org/2006/vcard/ns#hasMember">vcard:hasMember</a></dd>
+				<dd><a href="https://www.w3.org/TR/vocab-org/#property-hasmember" property="rdfs:seeAlso" resource="http://www.w3.org/ns/org#hasMember">org:hasMember</a></dd>
 			</dl>
 		</section>
 
@@ -179,6 +249,9 @@
 				<dd property="rdfs:comment">Contains memberships records which refer to you. When you join a group, its corresponding membership will be added to this collection. When you leave a group, its corresponding membership can be deleted and/or removed from this collection.</dd>
 				<dt>Range</dt>
 				<dd property="rdfs:range" resource="https://www.w3.org/ns/activitystreams#Collection">Collection</dd>
+				<dt>See also</dt>
+				<dd><a href="https://www.w3.org/TR/vocab-org/#property-memberof" property="rdfs:seeAlso" resource="http://www.w3.org/ns/org#memberOf">org:memberOf</a></dd>
+				<dd><a href="https://www.w3.org/TR/vocab-org/#org:hasMembership" property="rdfs:seeAlso" resource="http://www.w3.org/ns/org#hasMembership">org:hasMembership</a></dd>
 			</dl>
 		</section>
 	</section>
@@ -364,7 +437,7 @@
 		<section id="v0">
 			<h3>Initial CG Draft</h3>
 			<ul>
-				<li>2026-06-25: Add GitHub links to user stories. Add paragraph to introduction describing the concept of membership and how a member differs from an individual.</li>
+				<li>2026-06-25: Add GitHub links to user stories. Add paragraph to introduction describing the concept of membership and how a member differs from an individual. Create stub sections on group context and members collection.</li>
 				<li>2026-05-28: Add abstract, introduction, user stories, and potential approaches. Potentially define terms for Member, members, memberships.</li>
 			</ul>
 		</section>
