@@ -7,6 +7,8 @@ This is a task force of the [Social Web Incubator Community Group (SWICG)][swicg
 
 The current editor's draft of the task force report is available at [https://swicg.github.io/groups/](https://swicg.github.io/groups/).
 
+The task force [meets](https://www.w3.org/events/meetings/fdaf5ed4-f8db-47b8-875c-b3e53d5e7657/) on the 4th Thursday of the month. The agenda for the next meeting is an issue tagged with the [agenda](https://github.com/swicg/groups/issues?q=is%3Aissue+state%3Aopen+label%3Aagenda) label. Add a comment to the issue to add an item to the agenda!
+
 ## Leads
 
 The task force leads are [Evan Prodromou](https://github.com/evanp) and [a](https://github.com/trwnh).
